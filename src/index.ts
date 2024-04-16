@@ -1,3 +1,5 @@
-const a : number = 23
-const b : String = '1'
-console.log(a)
+import Block from "./models/Block";
+
+const genesis :Block = new Block("0", "1", "Hey");
+
+console.log(genesis);

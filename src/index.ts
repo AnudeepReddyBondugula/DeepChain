@@ -1,5 +1,11 @@
+import DeepChain from "./models/DeepChain";
 import Block from "./models/Block";
 
-const genesis :Block = new Block("0", "1", "Hey");
+const deepChain = new DeepChain();
 
-console.log(genesis);
+const n: number = 3
+
+for (let i = 0; i < n; i++) {
+    let data : string = "Hi! There Block Number: " + (i+1);
+    deepChain.addBlock(data);
+}

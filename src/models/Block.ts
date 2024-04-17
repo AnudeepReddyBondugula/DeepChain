@@ -6,11 +6,13 @@ export default class Block {
     private _previousHash : string = "";
     private _data : string = "";
     private _timestamp : number = 0;
+    private _nonce : number = 0;
 
     constructor (previousHash : string, data : string) {
         this._previousHash = previousHash;
         this._data = data;
         this._timestamp = Date.now();
+        this._hash = this.calculateHash();
     }
 
     // * Getter methods
@@ -30,6 +32,9 @@ export default class Block {
         return this._timestamp;
     }
 
+    get nonce () : number {
+        return this._nonce;
+    }
 
     // * Setter methods
     set hash (hash : string) {
@@ -48,13 +53,29 @@ export default class Block {
         this._timestamp = timestamp;
     }
 
-    calculateHash (): void {
-        const cryptoHelper : CryptoHelper = new CryptoHelper();
+    set nonce (nonce : number) {
+        this._nonce = nonce;
+    }
 
-        this._hash = cryptoHelper.apply256(
+    calculateHash (): string {
+        return CryptoHelper.apply256(
             this._previousHash + 
             this._data + 
-            this._timestamp.toString()
+            this._timestamp.toString() +
+            this._nonce.toString()
         );
+    }
+
+    mineBlock (difficulty : number, debug : boolean = false): string {
+        while (this.hash.substring(0, difficulty) !== Array(difficulty + 1).join("0")) {
+            this._nonce++;
+            this.hash = this.calculateHash();
+        }
+        if (debug) console.log("Block Mined result: " + this.hash);
+        return this.hash;
+    }
+
+    toString () : string {
+        return JSON.stringify(this, null, 2);
     }
 }
